@@ -1,0 +1,6 @@
+[submodule "snake-game"]
+    path = snake-game
+    url = https://github.com/rishabhsinghrajput081/snake-game.git
+
+
+
