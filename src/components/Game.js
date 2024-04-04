@@ -188,6 +188,8 @@ const Game = ({ speed }) => {
       {gameOver && (
         <GameOverOverlay>
           <div>Game Over!</div>
+          <div>Speed: {speed} ms</div> {/* Display the speed */}
+          <div>Score: {score}</div> {/* Display the score */}
           <RestartButton onClick={handleRestart}>Restart</RestartButton>
         </GameOverOverlay>
       )}
@@ -220,10 +222,13 @@ const AppContainer = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
+  background-color: black;
 `;
 
 const Container = styled.div`
   text-align: center;
+  color: white;
+
 `;
 
 const SpeedInput = styled.input`
@@ -263,7 +268,7 @@ const TimeElapsed = styled.div`
   top: 10px;
   left: 10px;
   font-size: 18px;
-  color: white;
+  color: black;
 `;
 
 const ScoreCounter = styled.div`
@@ -300,7 +305,7 @@ const LinkContainer1 = styled.div`
   position: absolute;
   bottom: 50px;
   left: 10px;
-  color: black;
+  color: red;
   font-size: 16px;
 `;
 
@@ -308,7 +313,7 @@ const LinkContainer = styled.div`
   position: absolute;
   bottom: 10px;
   left: 10px;
-  color: black;
+  color: white;
   font-size: 16px;
 `;
 
