@@ -55,7 +55,6 @@ const Game = ({ speed }) => {
   const [normalFruitEaten, setNormalFruitEaten] = useState(0);
   const [showBonusFruit, setShowBonusFruit] = useState(false);
   const timerRef = useRef(null);
-  let interval;
 
   const moveSnake = () => {
     const newSnake = [...snake];
@@ -145,8 +144,7 @@ const Game = ({ speed }) => {
 
   useEffect(() => {
     const startTime = Date.now();
-
-    interval = setInterval(() => {
+    const intervalRef = setInterval(() => {
       const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
       setTimer(elapsedTime); // Update the timer state
       if (!gameOver) {
@@ -154,13 +152,13 @@ const Game = ({ speed }) => {
         checkCollision();
       }
     }, speed);
-
-    timerRef.current = interval;
-
+  
+    timerRef.current = intervalRef;
+  
     document.addEventListener('keydown', handleKeyDown);
-
+  
     return () => {
-      clearInterval(interval);
+      clearInterval(intervalRef);
       clearInterval(timerRef.current);
       document.removeEventListener('keydown', handleKeyDown);
     };
