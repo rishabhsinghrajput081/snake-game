@@ -89,10 +89,9 @@ const Game = ({ speed }) => {
           }
           setShowBonusFruit(false);
         } else {
-          // Increase snake size by 1 for normal fruit
-          newSnake.pop(); // Remove the tail
+          setSnake((prevSnake) => [...prevSnake, prevSnake[prevSnake.length - 1]]);
           setNormalFruitEaten((prevCount) => prevCount + 1);
-          if (normalFruitEaten === 4) {
+          if (normalFruitEaten >= 4) {
             // Show bonus fruit after eating 5 normal fruits
             setShowBonusFruit(true);
             setNormalFruitEaten(0);
