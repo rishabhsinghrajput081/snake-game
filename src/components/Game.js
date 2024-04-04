@@ -56,94 +56,95 @@ const Game = ({ speed }) => {
   const [showBonusFruit, setShowBonusFruit] = useState(false);
   const timerRef = useRef(null);
 
-  const moveSnake = () => {
-    const newSnake = [...snake];
-    let newHead = { ...newSnake[0] };
-
-    switch (direction) {
-      case 'UP':
-        newHead.y -= 1;
-        break;
-      case 'DOWN':
-        newHead.y += 1;
-        break;
-      case 'LEFT':
-        newHead.x -= 1;
-        break;
-      case 'RIGHT':
-        newHead.x += 1;
-        break;
-      default:
-        break;
-    }
-
-    newSnake.unshift(newHead);
-    if (newHead.x === fruits[0].x && newHead.y === fruits[0].y) {
-      if (showBonusFruit) {
-        // Increase snake size by 5 if bonus fruit is eaten
-        for (let i = 0; i < 5; i++) {
-          newSnake.push({ ...newSnake[newSnake.length - 1] });
-        }
-        setShowBonusFruit(false);
-      } else {
-        // Increase snake size by 1 for normal fruit
-        newSnake.pop(); // Remove the tail
-        setNormalFruitEaten((prevCount) => prevCount + 1);
-        if (normalFruitEaten === 4) {
-          // Show bonus fruit after eating 5 normal fruits
-          setShowBonusFruit(true);
-          setNormalFruitEaten(0);
-        }
-      }
-      setScore((prevScore) => prevScore + 1);
-      generateNewFruit();
-    } else {
-      newSnake.pop();
-    }
-    setSnake(newSnake);
-  };
-
-  const handleKeyDown = (event) => {
-    switch (event.key) {
-      case 'ArrowUp':
-        if (direction !== 'DOWN') setDirection('UP');
-        break;
-      case 'ArrowDown':
-        if (direction !== 'UP') setDirection('DOWN');
-        break;
-      case 'ArrowLeft':
-        if (direction !== 'RIGHT') setDirection('LEFT');
-        break;
-      case 'ArrowRight':
-        if (direction !== 'LEFT') setDirection('RIGHT');
-        break;
-      default:
-        break;
-    }
-  };
-
-  const checkCollision = () => {
-    const head = snake[0];
-    if (head.x < 0 || head.x >= 72 || head.y < 0 || head.y >= 40) {
-      setGameOver(true);
-    }
-    for (let i = 1; i < snake.length; i++) {
-      if (head.x === snake[i].x && head.y === snake[i].y) {
-        setGameOver(true);
-      }
-    }
-  };
-
-  const generateNewFruit = () => {
-    const newFruit = {
-      x: Math.floor(Math.random() * 68),
-      y: Math.floor(Math.random() * 38)
-    };
-    setFruits([newFruit]);
-  };
-
   useEffect(() => {
     const startTime = Date.now();
+
+    const moveSnake = () => {
+      const newSnake = [...snake];
+      let newHead = { ...newSnake[0] };
+
+      switch (direction) {
+        case 'UP':
+          newHead.y -= 1;
+          break;
+        case 'DOWN':
+          newHead.y += 1;
+          break;
+        case 'LEFT':
+          newHead.x -= 1;
+          break;
+        case 'RIGHT':
+          newHead.x += 1;
+          break;
+        default:
+          break;
+      }
+
+      newSnake.unshift(newHead);
+      if (newHead.x === fruits[0].x && newHead.y === fruits[0].y) {
+        if (showBonusFruit) {
+          // Increase snake size by 5 if bonus fruit is eaten
+          for (let i = 0; i < 5; i++) {
+            newSnake.push({ ...newSnake[newSnake.length - 1] });
+          }
+          setShowBonusFruit(false);
+        } else {
+          // Increase snake size by 1 for normal fruit
+          newSnake.pop(); // Remove the tail
+          setNormalFruitEaten((prevCount) => prevCount + 1);
+          if (normalFruitEaten === 4) {
+            // Show bonus fruit after eating 5 normal fruits
+            setShowBonusFruit(true);
+            setNormalFruitEaten(0);
+          }
+        }
+        setScore((prevScore) => prevScore + 1);
+        generateNewFruit();
+      } else {
+        newSnake.pop();
+      }
+      setSnake(newSnake);
+    };
+
+    const handleKeyDown = (event) => {
+      switch (event.key) {
+        case 'ArrowUp':
+          if (direction !== 'DOWN') setDirection('UP');
+          break;
+        case 'ArrowDown':
+          if (direction !== 'UP') setDirection('DOWN');
+          break;
+        case 'ArrowLeft':
+          if (direction !== 'RIGHT') setDirection('LEFT');
+          break;
+        case 'ArrowRight':
+          if (direction !== 'LEFT') setDirection('RIGHT');
+          break;
+        default:
+          break;
+      }
+    };
+
+    const checkCollision = () => {
+      const head = snake[0];
+      if (head.x < 0 || head.x >= 72 || head.y < 0 || head.y >= 40) {
+        setGameOver(true);
+      }
+      for (let i = 1; i < snake.length; i++) {
+        if (head.x === snake[i].x && head.y === snake[i].y) {
+          setGameOver(true);
+        }
+      }
+    };
+
+    const generateNewFruit = () => {
+      const newFruit = {
+        x: Math.floor(Math.random() * 68),
+        y: Math.floor(Math.random() * 38)
+      };
+      setFruits([newFruit]);
+    };
+
     const intervalRef = setInterval(() => {
       const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
       setTimer(elapsedTime); // Update the timer state
@@ -152,17 +153,17 @@ const Game = ({ speed }) => {
         checkCollision();
       }
     }, speed);
-  
+
     timerRef.current = intervalRef;
-  
+
     document.addEventListener('keydown', handleKeyDown);
-  
+
     return () => {
       clearInterval(intervalRef);
       clearInterval(timerRef.current);
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [snake, direction, gameOver, speed]);
+  }, [snake, direction, gameOver, speed, fruits, normalFruitEaten, showBonusFruit]);
 
   const handleRestart = () => {
     setSnake([{ x: 10, y: 10 }]);
@@ -226,7 +227,6 @@ const AppContainer = styled.div`
 const Container = styled.div`
   text-align: center;
   color: white;
-
 `;
 
 const SpeedInput = styled.input`
@@ -299,6 +299,7 @@ const RestartButton = styled.button`
     background-color: #45a049;
   }
 `;
+
 const LinkContainer1 = styled.div`
   position: absolute;
   bottom: 50px;
