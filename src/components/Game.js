@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import Snake from './Snake';
 import Fruit from './Fruit';
 
+// Import your eat sound
+import eatSound from '../assets/eatSound.mp3';
+
 const SpeedSelection = ({ onStart }) => {
   const [speed, setSpeed] = useState(50);
 
@@ -20,9 +23,9 @@ const SpeedSelection = ({ onStart }) => {
         Welcome to Snake Game! Adjust the speed below and click "Start Game" to begin.
       </p>
       <p>
-        [50 ms  - lowest]
+        [50 - slowest]
         ...............
-        [30 ms  - fastest]
+        [30 - fastest]
       </p>
       <SpeedInput
         type="range"
@@ -31,7 +34,7 @@ const SpeedSelection = ({ onStart }) => {
         value={speed}
         onChange={handleSpeedChange}
       />
-      <SpeedLabel>Speed: {speed} ms</SpeedLabel>
+      <SpeedLabel>Speed: {speed}</SpeedLabel>
       <StartButton onClick={handleStartGame}>Start Game</StartButton>
 
       <LinkContainer1>
@@ -55,6 +58,14 @@ const Game = ({ speed }) => {
   const [normalFruitEaten, setNormalFruitEaten] = useState(0);
   const [showBonusFruit, setShowBonusFruit] = useState(false);
   const timerRef = useRef(null);
+
+  // Add useEffect to play sound when fruit is eaten
+  useEffect(() => {
+    if (normalFruitEaten > 0 || showBonusFruit) {
+      const audio = new Audio(eatSound);
+      audio.play();
+    }
+  }, [normalFruitEaten, showBonusFruit]);
 
   useEffect(() => {
     const startTime = Date.now();
@@ -186,7 +197,7 @@ const Game = ({ speed }) => {
       {gameOver && (
         <GameOverOverlay>
           <div>Game Over!</div>
-          <div>Speed: {speed} ms</div> {/* Display the speed */}
+          <div>Speed: {speed} </div> {/* Display the speed */}
           <div>Score: {score}</div> {/* Display the score */}
           <RestartButton onClick={handleRestart}>Restart</RestartButton>
         </GameOverOverlay>
@@ -270,7 +281,7 @@ const TimeElapsed = styled.div`
 
 const ScoreCounter = styled.div`
   position: absolute;
-  top: 10px;
+  top: 50px;
   margin-left: 700px;
   font-size: 18px;
   color: white;
